@@ -1,0 +1,14 @@
+---
+github_session=GithubSession:
+    page=PageFetcher:
+        _url: "https://github.com/dashboard-feed"
+        html=HtmlParser:
+            events=ElementsSelector:
+                _selector: "[data-test-selector=visible-event]"
+                description=ElementSelector:
+                    _selector: "div>div>div>div>div>div"
+                    _value: "text_clean"
+---
+{% for event in github_session.page.html.events -%}
+* {{event.description}}
+{% endfor %}

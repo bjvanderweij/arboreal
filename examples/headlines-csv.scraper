@@ -1,0 +1,40 @@
+---
+nos=PageFetcher:
+    _url: "https://www.nos.nl"
+    html=HtmlParser:
+        news_items=ElementsSelector:
+            _selector: "li.cb-mab"
+            title=ElementSelector:
+                _selector: "h2"
+                _value: "text"
+            link=ElementSelector:
+                _selector: "a"
+                _value: ".href"
+            description=ElementSelector:
+                _selector: "p"
+                _value: "text"
+nu=PageFetcher:
+    _url: "https://www.nu.nl"
+    html=HtmlParser:
+        article_lists=ElementsSelector:
+            _selector: "div.articlelist.block"
+            type=ElementProperty:
+                _value: ".data-section"
+            articles=ElementsSelector:
+                _selector: "li.list__item--text"
+                title=ElementSelector:
+                    _selector: "span.item-title__title"
+                    _value: "text"
+                link=ElementSelector:
+                    _selector: "a"
+                    _value: ".href"
+---
+title,link,description,category
+{% for item in nos.html.news_items -%}
+{{ item.title }},{{item.link}},{{item.description}},
+{%- endfor %}
+{% for article_list in nu.html.article_lists -%}
+{% for article in article_list.articles -%}
+{{ article.title }},{{article.link}},,{{article_list.type}}
+{%- endfor %}
+{%- endfor %}
