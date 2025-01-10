@@ -1,0 +1,9 @@
+* context type checking
+* casting __init__ argument types
+
+Document functionaliy
+
+* If no name is provided 
+* Context is stored at path
+* Context is accessed by parameters starting with __ and as value the context path
+* **Concurrent fetching** of pages: create a scheduler that will fetchi different domains concurrently (with maximum number of parallel requests)
