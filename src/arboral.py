@@ -1,8 +1,17 @@
-import inspect
+"""The main arboral module."""
+import inspect 
+import sys
 import warnings
-from typing import (Union, Dict, List, Tuple, Optional, 
-        Callable, get_type_hints, Any, Iterable, get_origin, get_args)
-
+from typing import Any
+from typing import Callable
+from typing import Dict
+from typing import get_args
+from typing import get_origin
+from typing import get_type_hints
+from typing import Iterable
+from typing import List
+from typing import Tuple
+from typing import Union
 
 class TransformerException(Exception):
     pass
@@ -15,7 +24,7 @@ class ParsingError(Exception):
 class Operation():
     
     def __call__(self, input_: Any) -> None:
-        NotImplemented
+        ...
 
 
 class Singleton(Operation):
@@ -27,19 +36,19 @@ class Iterator(Operation):
 
 
 class Context(Operation):
-    
+
     def transform(self, input_: Any) -> "Context":
         return self
 
 
 class RootOperation(Singleton):
-    
+
     def __call__(self, input_: Any) -> Any:
         return input_
 
 
 class TransformationTree():
-    
+
     def __init__(
             self,
             operation: Callable,
@@ -50,7 +59,7 @@ class TransformationTree():
             is_context: bool = False,
             is_iterator: bool = False,
             anonymous_child: bool = False,
-        ):
+            ):
         self.operation = operation
         self.args = args
         self.path = path
@@ -133,7 +142,7 @@ class DictParser():
             operation: str = RootOperation,
             tree_cls=TransformationTree,
             path: List[str] = ['root']
-        ) -> TransformationTree:
+            ) -> TransformationTree:
         """Parse a dictionary.
 
         Return a nested structure of TransformationTree objects.
@@ -233,19 +242,22 @@ def get_context(path):
     return CONTEXT[path]
 
 
-def evaluate(tree: TransformationTree, input_: Any = None, stack = ['root']):
-    context = {name: get_context(path) for name, path in tree.context_args.items()}
+def evaluate(tree: TransformationTree, input_: Any = None, stack=['root']):
+    context = {name: get_context(path)
+               for name, path in tree.context_args.items()}
     operation = tree.operation(**tree.args, **context)
     try:
         result = operation(input_)
     except Exception as e:
-        import sys
-        raise type(e)(f'[at {".".join(stack)}] {str(e)}').with_traceback(sys.exc_info()[2])
-        #raise TransformerException(f'An exception occurred at {".".join(stack)}')
+        raise type(e)(f'[at {".".join(stack)}] {str(e)}').with_traceback(
+                sys.exc_info()[2])
+        # raise TransformerException(
+        #     f'An exception occurred at {".".join(stack)}')
+
     def trav():
         if tree.is_terminal:
             return result
-        elif tree.is_iterator:
+        if tree.is_iterator:
             return [_traverse(tree, r, stack) for r in result]
         return _traverse(tree, result, stack)
     set_context(tree, result)

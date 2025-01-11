@@ -14,8 +14,9 @@ The tree-structured instructions can be regarded a kind of "computational templa
 The interpreter takes as its input a tree-like data structure (an expression in a domain-specific language).
 This input can be regarded a kind of "computational template" for a datastructure that specifies how to populate itself.
 
-The example that inspired me to make this is a scraper that is defined in as the dictionary or JSON structure that it results in.
-For example, the expression (in YAML) below defines a scraper for a Dutch news site:
+The use-case that inspired me to make this is a YAML language for defining scrapers.
+The language simultaneously defines how to scrape a website and the hierarchical structure of the resulting data 
+For example, the YAML expression below defines a scraper for a Dutch news site that extracts headlines, links, and descriptions:
 
 ```yaml
 nos=Fetch:

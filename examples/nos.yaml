@@ -1,0 +1,15 @@
+nos=Fetch:
+    _url: "https://www.nos.nl"
+    _cache: true
+    html=Parse:
+        news_items=SelectElements:
+            _selector: "li.cb-mab"
+            title=SelectElement:
+                _selector: "h2"
+                _value: "text"
+            link=SelectElement:
+                _selector: "a"
+                _value: ".href"
+            description=SelectElement:
+                _selector: "p"
+                _value: "text"
